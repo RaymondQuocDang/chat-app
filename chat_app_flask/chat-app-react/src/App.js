@@ -1,9 +1,12 @@
 import './App.css';
+import UserList from './components/UserList.js';
+import Chat from './components/Chat.js';
 
 function App() {
   return (
     <div className="App">
-      <h1>Hello</h1>
+      <UserList></UserList>
+      <Chat></Chat>
     </div>
   );
 }
