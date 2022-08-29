@@ -1,10 +1,11 @@
 import './Chat.css'
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 function Chat() {
 
-    const [textBox, setTextBox] = useState('');
+    const [textBoxInput, setTextBoxInput] = useState('');
     const [messages, setMessages] = useState ([]);
+    const bottomRef = useRef(null);
 
     function sendMessageOnEnter(keyPress) {
         
@@ -15,14 +16,14 @@ function Chat() {
     }
 
     function sendMessage() {
-        if (textBox === '') {
+        if (textBoxInput === '') {
             return;
         }
 
         const messageList = messages;
-        messageList.push(textBox);
+        messageList.push(textBoxInput);
         setMessages(messageList);
-        setTextBox('')
+        setTextBoxInput('')
     } 
 
     function displayMessages() {
@@ -36,13 +37,19 @@ function Chat() {
         return jsxMessages;
     }
 
+    useEffect(() => {
+        bottomRef.current.scrollIntoView({behavior: 'smooth'});
+      }, [textBoxInput]);
+
     return(
         <div className='chat-container'>
             <div className='chat-box'>
+                <div className='filler'></div>
                 {displayMessages()}
+                <div ref={bottomRef}></div>
             </div>
             <div className='text-box-container'>
-                <input className='text-box' type='text' placeholder='Message...' onKeyDown={(e) => sendMessageOnEnter(e.key)} onChange={(e) => setTextBox(e.target.value)} value={textBox} ></input>
+                <input className='text-box' type='text' placeholder='Message...' onKeyDown={(e) => sendMessageOnEnter(e.key)} onChange={(e) => setTextBoxInput(e.target.value)} value={textBoxInput} ></input>
                 <button className='send-button' onClick={() => sendMessage()}>Send</button>
             </div>
         </div>
