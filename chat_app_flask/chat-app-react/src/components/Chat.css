@@ -56,10 +56,20 @@
     cursor: pointer;
 }
 
-.message-container {
-    margin: 0px 10px 20px 30px;
+.message-username-container {
+    margin: 10px 0px 10px 30px;
     height: auto;
-    border-radius: 10px;
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+    color: #333;
+}
+
+.username {
+    margin-bottom: 10px;
+}
+
+.message-container {
+    margin: 0px 0px 10px 30px;
+    height: auto;
     font-family: Roboto, Arial, Helvetica, sans-serif;
     color: #333;
 }
