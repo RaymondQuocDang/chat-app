@@ -12,6 +12,7 @@ gunicorn = "^20.1.0"
 Flask-SQLAlchemy = "^2.5.1"
 psycopg2-binary = "^2.9.3"
 python-dotenv = "^0.20.0"
+SQLAlchemy = "^1.4.40"
 
 [tool.poetry.dev-dependencies]
 
