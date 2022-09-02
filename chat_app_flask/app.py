@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, make_response, send_from_directory
+from flask import Flask, request, jsonify, make_response, send_from_directory, session, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 import os
 from datetime import datetime
@@ -9,6 +9,7 @@ password = os.environ.get('PASSWORD')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://postgres:{password}@localhost/chatapp"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config['SECRET_KEY'] = 'secret_key'
 
 db = SQLAlchemy(app)
 
@@ -46,6 +47,31 @@ class Messages(db.Model):
             'timestamp': self.timestamp
         }
 
+@app.route("/")
+def index():
+    return send_from_directory(app.static_folder, 'index.html')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        session.pop('user_id', None)
+        
+        username = request.form['username']
+        user = Users.query.filter_by(username=username).first()
+        
+        if username == user.username:
+            session['user_id'] = user.id
+            return send_from_directory(app.static_folder, 'index.html')
+        
+        return redirect(url_for('login'))
+            
+    return render_template('login.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def register():
+
+    return render_template('register.html')
 
 @app.route('/api/users', methods=['GET', 'POST'])
 def users():
@@ -88,11 +114,6 @@ def messages():
     else:
         query_messages = Messages.query.all()
         return jsonify({"message_list": [query_message.serialize() for query_message in query_messages]})
-
-
-@app.route("/")
-def index():
-    return send_from_directory(app.static_folder, 'index.html')
 
 
 
