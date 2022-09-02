@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, make_response, send_from_directory, s
 from flask_sqlalchemy import SQLAlchemy
 import os
 from datetime import datetime
-
+from models import db, Users, Messages
 
 app = Flask(__name__, static_folder='chat-app-react/build', static_url_path='')
 password = os.environ.get('PASSWORD')
@@ -11,41 +11,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://postgres:{password}@local
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['SECRET_KEY'] = 'secret_key'
 
-db = SQLAlchemy(app)
+db.init_app(app)
+db.create_all()
 
-
-class Users(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    messages = db.relationship('Messages', backref='user', lazy=True)
-
-    def __init__(self, username):
-        self.username = username
-
-    def serialize(self):
-        return {
-            'id': self.id,
-            'username': self.username
-        }
-
-
-class Messages(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    message = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    timestamp = db.Column(db.DateTime,nullable=False, default=datetime.utcnow)
-
-    def __init__(self, message, user_id):
-        self.message = message
-        self.user_id = user_id
-        
-    def serialize(self):
-        return {
-            'id': self.id,
-            'username': self.user.username,
-            'message': self.message,
-            'timestamp': self.timestamp
-        }
 
 @app.route("/")
 def index():
@@ -116,8 +84,6 @@ def messages():
         return jsonify({"message_list": [query_message.serialize() for query_message in query_messages]})
 
 
-
-db.create_all()
 
 if __name__ == '__main__':
     app.run(debug=True)
