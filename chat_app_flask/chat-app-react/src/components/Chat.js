@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 
 function Chat() {
 
-    const [messageComposerValue, setMessageComposerValue] = useState('');
+    const [messageText, setMessageText] = useState('');
     const [messages, setMessages] = useState([]);
     const bottomRef = useRef(null);
 
@@ -16,14 +16,14 @@ function Chat() {
     }
 
     function sendMessage() {
-        if (messageComposerValue === '') {
+        if (messageText === '') {
             return;
         }
-
-        const messageList = messages;
-        messageList.push({ 'username': 'Newt King', 'message': messageComposerValue });
-        setMessages(messageList);
-        setMessageComposerValue('')
+    
+        setMessages((prevMessages) => {
+            return [...prevMessages, { 'username': 'Newt King', 'message': messageText }]
+        });
+        setMessageText('')
     }
 
     function displayMessages() {
@@ -58,8 +58,9 @@ function Chat() {
     }
 
     useEffect(() => {
+        console.log('use effect fired')
         bottomRef.current.scrollIntoView({ behavior: 'smooth' });
-    }, [messageComposerValue]);
+    }, [messages]);
 
     return (
         <div className='chat-container'>
@@ -71,7 +72,7 @@ function Chat() {
                 <div ref={bottomRef}></div>
             </div>
             <div className='text-box-container'>
-                <input className='text-box' type='text' placeholder='Message...' onKeyDown={(e) => sendMessageOnEnter(e.key)} onChange={(e) => setMessageComposerValue(e.target.value)} value={messageComposerValue} ></input>
+                <input className='text-box' type='text' placeholder='Message...' onKeyDown={(e) => sendMessageOnEnter(e.key)} onChange={(e) => setMessageText(e.target.value)} value={messageText} ></input>
                 <button className='send-button' onClick={() => sendMessage()}>Send</button>
             </div>
         </div>
