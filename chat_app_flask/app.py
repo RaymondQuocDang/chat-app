@@ -1,7 +1,6 @@
-from flask import Flask, request, jsonify, make_response, send_from_directory, session, render_template, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, request, jsonify, make_response, send_from_directory, session, redirect, url_for
+from flask_bcrypt import Bcrypt
 import os
-from datetime import datetime
 from models import db, Users, Messages
 
 app = Flask(__name__, static_folder='chat-app-react/build', static_url_path='')
@@ -11,8 +10,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://postgres:{password}@local
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['SECRET_KEY'] = 'secret_key'
 
+bcrypt = Bcrypt(app)
 db.init_app(app)
-db.create_all()
+
+with app.app_context():
+    db.create_all()
 
 
 @app.route("/")
@@ -23,33 +25,53 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        session.pop('user_id', None)
+        username = request.json['username']
+        password = request.json['password']
         
-        username = request.form['username']
         user = Users.query.filter_by(username=username).first()
         
-        if username == user.username:
-            session['user_id'] = user.id
-            return send_from_directory(app.static_folder, 'index.html')
+        if user is None:
+            return jsonify({'error': 'Unauthorized'}), 401
+
+        if not bcrypt.check_password_hash(user.password, password):
+            return jsonify({'error': 'Unauthorized'}), 401
         
-        return redirect(url_for('login'))
-            
-    return render_template('login.html')
+        session['user_id'] = user.id    
+        return jsonify({'id': user.id, 'username': user.username})
 
-@app.route('/login', methods=['GET', 'POST'])
+
+@app.route('/register', methods=['GET', 'POST'])
 def register():
+    if request.method == 'POST':
+        username = request.json['username']
+        password = request.json['password']
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        
+        user_exists = Users.query.filter_by(username=username).first() is not None
+        
+        if user_exists:
+            return jsonify({'error:': 'A user already exist'}), 409   
+        
+        new_user = Users(username, hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+        
+        return jsonify({'id': new_user.id, 'username': new_user.username}), 201
 
-    return render_template('register.html')
 
 @app.route('/api/users', methods=['GET', 'POST'])
 def users():
     if request.method == "POST":
         user_data = request.get_json()
-        entry = Users(user_data['username'])
-        db.session.add(entry)
+        username = user_data['username']
+        password = user_data['password']
+        hashed_password = bcrypt.generate_password_hash(password)
+        
+        new_user = Users(username, hashed_password)
+        db.session.add(new_user)
         db.session.commit()
 
-        user_id = Users.query.filter_by(username=user_data['username']).first().id
+        user_id = Users.query.filter_by(username=new_user.username).first().id
         data = {'message': 'Done', 'code': 'SUCCESS'}
         resp = make_response(jsonify(data), 201)
         resp.headers['url'] = f'/users/{user_id}'
