@@ -1,12 +1,11 @@
 import './App.css';
-import UserList from './components/UserList.js';
-import Chat from './components/Chat.js';
+import ChatApp from './components/ChatApp';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 function App() {
   return (
-    <div className="App">
-      <UserList></UserList>
-      <Chat></Chat>
+    <div>
+      <ChatApp />
     </div>
   );
 }
