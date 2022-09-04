@@ -1,7 +1,7 @@
-import './Chat.css'
+import './ChatView.css'
 import { useState, useEffect, useRef } from 'react';
 
-function Chat() {
+function ChatView({ current_user }) {
 
     const [messageComposerValue, setMessageComposerValue] = useState('');
     const [messages, setMessages] = useState([]);
@@ -21,7 +21,7 @@ function Chat() {
         }
 
         const messageList = messages;
-        messageList.push({ 'username': 'Newt King', 'message': messageComposerValue });
+        messageList.push({ 'username': current_user, 'message': messageComposerValue });
         setMessages(messageList);
         setMessageComposerValue('')
     }
@@ -78,4 +78,4 @@ function Chat() {
     );
 }
 
-export default Chat;
+export default ChatView;
