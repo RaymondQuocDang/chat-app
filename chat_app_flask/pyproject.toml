@@ -13,6 +13,10 @@ Flask-SQLAlchemy = "^2.5.1"
 psycopg2-binary = "^2.9.3"
 python-dotenv = "^0.20.0"
 SQLAlchemy = "^1.4.40"
+Flask-Login = "^0.6.2"
+Flask-Bcrypt = "^1.0.1"
+Flask-Session = "^0.4.0"
+Flask-Cors = "^3.0.10"
 
 [tool.poetry.dev-dependencies]
 

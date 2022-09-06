@@ -1,77 +1,97 @@
-from flask import Flask, request, jsonify, make_response, send_from_directory
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, request, jsonify, make_response, send_from_directory, session, redirect, url_for
+from flask_bcrypt import Bcrypt
 import os
-from datetime import datetime
-
+from models import db, Users, Messages
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__, static_folder='chat-app-react/build', static_url_path='')
 password = os.environ.get('PASSWORD')
+cors = CORS(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://postgres:{password}@localhost/chatapp"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config['SECRET_KEY'] = 'secret_key'
 
-db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
+db.init_app(app)
 
-
-class Users(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    messages = db.relationship('Messages', backref='user', lazy=True)
-
-    def __init__(self, username):
-        self.username = username
-
-    def serialize(self):
-        return {
-            'id': self.id,
-            'username': self.username
-        }
+with app.app_context():
+    db.create_all()
 
 
-class Messages(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    message = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    timestamp = db.Column(db.DateTime,nullable=False, default=datetime.utcnow)
+@app.route("/")
+@cross_origin()
+def index():
+    return send_from_directory(app.static_folder, 'index.html')
 
-    def __init__(self, message, user_id):
-        self.message = message
-        self.user_id = user_id
+
+@app.route('/login', methods=['GET', 'POST'])
+@cross_origin()
+def login():
+    if request.method == 'POST':
+        username = request.json['username']
+        password = request.json['password']
         
-    def serialize(self):
-        return {
-            'id': self.id,
-            'username': self.user.username,
-            'message': self.message,
-            'timestamp': self.timestamp
-        }
+        user = Users.query.filter_by(username=username).first()
+        
+        if user is None:
+            return jsonify({'error': 'Unauthorized'}), 401
+
+        if not bcrypt.check_password_hash(user.password, password):
+            return jsonify({'error': 'Unauthorized'}), 401
+        
+        session['user_id'] = user.id    
+        return jsonify({'id': user.id, 'username': user.username}), 200
 
 
-@app.route('/api/users', methods=['GET', 'POST'])
-def users():
-    if request.method == "POST":
-        user_data = request.get_json()
-        entry = Users(user_data['username'])
-        db.session.add(entry)
+@app.route('/register', methods=['GET', 'POST'])
+@cross_origin()
+def register():
+    if request.method == 'POST':
+        username = request.json['username']
+        password = request.json['password']
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        
+        user_exists = Users.query.filter_by(username=username).first()
+        
+        if user_exists:
+            return {"id": user_exists.id}, 401
+        
+        new_user = Users(username, hashed_password)
+        db.session.add(new_user)
         db.session.commit()
-
-        user_id = Users.query.filter_by(username=user_data['username']).first().id
-        data = {'message': 'Done', 'code': 'SUCCESS'}
-        resp = make_response(jsonify(data), 201)
-        resp.headers['url'] = f'/users/{user_id}'
-        return resp
-    else:
-        query_users = Users.query.all()
-        return jsonify({"user_list": [query_user.serialize() for query_user in query_users]})
+        
+        return jsonify({'id': new_user.id, 'username': new_user.username}), 201
 
 
-@app.route('/api/users/<int:id>')
-def single_user(id):
-    single_user = Users.query.filter_by(id=id).first()
-    return single_user.serialize()
+@app.route('/logout')
+@cross_origin()
+def logout():
+    session.pop('user_id', None)
+    return jsonify({'message': 'Log out was successful'}), 200
 
 
-@app.route('/api/messages', methods=['POST', 'GET'])
+@app.route('/is-logged-in')
+@cross_origin()
+def is_logged_in():
+    
+    user_id =session.get('user_id')
+    
+    if not user_id:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    user = Users.query.filter_by(id=user_id).first()
+    return user.serialize()
+
+@app.route('/users')
+@cross_origin()
+def users():
+    users = Users.query.all()
+    return jsonify({"user_list": [user.serialize() for user in users]})
+
+
+@app.route('/messages', methods=['POST', 'GET'])
+@cross_origin()
 def messages():
 
     if request.method == "POST":
@@ -90,13 +110,10 @@ def messages():
         return jsonify({"message_list": [query_message.serialize() for query_message in query_messages]})
 
 
-@app.route("/")
-def index():
-    return send_from_directory(app.static_folder, 'index.html')
+@app.errorhandler(404)   
+def not_found(e):   
+  return app.send_static_file('index.html')
 
-
-
-db.create_all()
 
 if __name__ == '__main__':
     app.run(debug=True)

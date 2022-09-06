@@ -1,14 +1,43 @@
-import './UserList.css'
+import './UserList.css';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
-function UserList() {
+function UserList({ current_user }) {
 
-    return(
+    const [users, setUsers] = useState([])
+
+    useEffect(() => {
+        getUsers();
+    }, []);
+
+    async function getUsers() {
+        const response = await axios.get('/users')
+        console.log(response.data.user_list)
+        setUsers(response.data.user_list)
+    }
+
+    const navigate = useNavigate();
+
+    async function LogOut() {
+        const response = await axios.get('/logout')
+        console.log(response.data)
+        navigate('/login', { replace: true })
+    }
+
+    const userList = users.map((user) => {
+        return (<div key={user.id} className='user-container'><p>{user.username}</p></div>)
+    })
+
+
+
+    return (
         <div className='users-list-container'>
-            <div className='user-container'><p>Newt King</p></div>
-            <div className='user-container'><p>Rock Knight</p></div>
-            <div className='user-container'><p>EZ Lee</p></div>
-            <div className='user-container'><p>Grundtal</p></div>
+            {userList}
+            <div><p>Logged-in as {current_user}</p></div>
+            <button onClick={() => LogOut()} >Log Out</button>
         </div>
+
     );
 }
 
