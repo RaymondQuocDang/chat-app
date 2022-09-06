@@ -32,10 +32,15 @@ function UserList({ current_user }) {
 
 
     return (
-        <div className='users-list-container'>
-            {userList}
-            <div><p>Logged-in as {current_user}</p></div>
-            <button onClick={() => LogOut()} >Log Out</button>
+        <div>
+            <div className='users-list-container'>
+                <div className='user-list-title'><p>Users</p></div>
+                {userList}
+            </div>
+            <div className='profile-container'>
+                <div className='current-user'><p>Logged-in as {current_user}</p></div>
+                <button className='logout-button' onClick={() => LogOut()} >Log Out</button>
+            </div>
         </div>
 
     );

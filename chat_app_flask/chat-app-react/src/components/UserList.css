@@ -1,16 +1,69 @@
 .users-list-container {
-    height: 100vh;
+    height: 90vh;
     width: 250px;
     border-radius: 5px 0px 0px 5px;
     background-color: #edede9;
+    overflow-y: scroll;
 }
 
-.user-container {
+.user-list-title {
     margin-left: 30px;
     margin-top: 20px;
     color: #333;
     font-family: Roboto, Arial, Helvetica, sans-serif;
     padding-top: 10px;
     font-weight: 600;
+    font-size: 25px;
+}
 
+.user-container {
+    margin-left: 30px;
+    margin-top: 15px;
+    color: #333;
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+    padding-top: 10px;
+    font-weight: 600;
+}
+
+.users-list-container::-webkit-scrollbar {
+    width: 4px;
+}
+  
+.users-list-container::-webkit-scrollbar-track {
+    background: #ccc;
+    border-radius: 10px;
+}
+  
+.users-list-container::-webkit-scrollbar-thumb {
+    background-color: #aaa;
+    border-radius: 20px;
+}
+
+.profile-container {
+    background-color: #edede9;
+    border-top: 1px solid #aaa;
+    height: 10vh;
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+.logout-button {
+    background-color: #333;
+    color: #eee;
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+    width: 75px;
+    font-size: 15px;
+    height: 40px;
+    border-radius: 5px;
+    margin: 10px 0px 0px 30px 
+}
+
+.logout-button:hover {
+    cursor: pointer;
+}
+
+.current-user {
+    margin: 10px 0px 0px 30px;
+    font-weight: 600;
 }

@@ -1,32 +1,99 @@
 .login-page {
     display: flex;
-    flex-direction: column;
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+    align-items: center;
+    background-color: #d6ccc2;
+    height: 100vh;
 }
 
-.input-box {
-    width: 60%;
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 200px;
+    width: 350px;
+}
+
+.title {
+    font-weight: 600;
+    font-size: 60px;
+    margin-bottom: 60px;
+}
+
+.text {
+    font-weight: 600;
+}
+
+.input-box-username {
+    width: 100%;
+    min-width: 300px;
     padding: 12px 20px;
-    margin: 20px 20px 20px 20px;
+    margin: 20px 0px 20px 0px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    color: #333;
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.input-box-password {
+    width: 100%;
+    min-width: 300px;
+    padding: 12px 20px;
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333;
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: 600;
 }
 
 .button {
-    background-color: #4CAF50; /* Green */
+    background-color: #333;
     border: none;
     color: white;
-    padding: 15px 32px;
+    padding: 13px;
     text-align: center;
     text-decoration: none;
     font-size: 16px;
     border-radius: 4px;
-    width: 200px;
-    margin-top: 20px;
+    width: 100%;
+    min-width: 300px;
+    margin-top: 15px;
     font-family: Roboto, Arial, Helvetica, sans-serif;
+}
+
+.button:hover {
+    cursor: pointer;
+}
+
+.link-container {
+    margin-top: 50px;
+    display: flex;
 }
 
 .link {
     text-decoration: none;
     font-size: 16px;
     font-family: Roboto, Arial, Helvetica, sans-serif;
+    margin-left: 5px;
+    color: #021691;
+    font-weight: 600;
+}
+
+.error-message-container {
+    height: 20px;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.error-message {
+    color: darkred;
+    font-weight: 600px;
+    font-size: 14px;
+    font-weight: 600;
 }

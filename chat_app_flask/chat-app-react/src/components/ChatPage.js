@@ -5,13 +5,13 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'
 
-function ChatPage () {
+function ChatPage() {
     const [user, setUser] = useState(null)
     const navigate = useNavigate();
 
 
     useEffect(() => {
-        
+
         isLoggedIn();
 
     }, []);
@@ -24,17 +24,17 @@ function ChatPage () {
         } catch (error) {
             console.log(error)
             console.log(user)
-            navigate('/login', {replace: true})
+            navigate('/login', { replace: true })
         }
 
     }
 
 
 
-    return(
+    return (
         <div className='chat-app'>
-            <UserList current_user={user}></UserList>
             <ChatView current_user={user}></ChatView>
+            <UserList current_user={user}></UserList>
         </div>
     );
 }

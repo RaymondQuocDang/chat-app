@@ -1,11 +1,19 @@
 .register-page {
     display: flex;
-    flex-direction: column;
-}
-
-
-.link {
-    text-decoration: none;
-    font-size: 16px;
     font-family: Roboto, Arial, Helvetica, sans-serif;
+    align-items: center;
+    background-color: #d6ccc2;
+    height: 100vh;
 }
+
+.register-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 200px;
+    width: 350px;
+}
+
+
