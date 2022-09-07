@@ -9,7 +9,6 @@ function ChatPage() {
     const [user, setUser] = useState(null)
     const navigate = useNavigate();
 
-
     useEffect(() => {
 
         isLoggedIn();
@@ -21,12 +20,10 @@ function ChatPage() {
             const response = await axios.get('/api/is-logged-in')
             setUser(response.data.username);
         } catch (error) {
-            navigate('/login', { replace: true })
+            navigate('/', { replace: true })
         }
 
     }
-
-
 
     return (
         <div className='chat-app'>

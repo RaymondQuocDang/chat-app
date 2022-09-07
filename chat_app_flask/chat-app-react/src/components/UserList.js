@@ -20,7 +20,7 @@ function UserList({ current_user }) {
 
     function LogOut() {
         axios.get('/api/logout')
-        navigate('/login', { replace: true })
+        navigate('/', { replace: true })
     }
 
     const userList = users.map((user) => {

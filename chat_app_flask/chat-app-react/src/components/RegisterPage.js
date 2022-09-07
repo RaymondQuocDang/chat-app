@@ -53,7 +53,7 @@ function RegisterPage() {
                 <input type='password' placeholder='Password' className='input-box-password' onChange={(e) => setPassword(e.target.value)} />
                 <div className='error-message-container'>{displayErrorMessage()}</div>
                 <button type='submit' className='button' onClick={() => register()}>Register</button>
-                <div className='link-container'><p className='text'>Already have an account?</p><Link className='link' to='/login'>Log In</Link></div>
+                <div className='link-container'><p className='text'>Already have an account?</p><Link className='link' to='/'>Log In</Link></div>
             </div>
         </div>
     );

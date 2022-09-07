@@ -11,9 +11,9 @@ function App() {
     <Router>
       <div>
         <Routes>
-          <Route path="/login" exact element={<LoginPage/>}/>
+          <Route path="/" exact element={<LoginPage/>}/>
           <Route path="/register" exact element={<RegisterPage/>}/>
-          <Route path="/" exact element={<ChatPage/>} />
+          <Route path="/chat-app" exact element={<ChatPage/>} />
           <Route path="*" element={<NotFound/>}/>
           <Route path="/register/success" element={<RegistrationSuccess/>}/>
         </Routes>

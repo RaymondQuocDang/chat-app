@@ -19,7 +19,7 @@ function LoginPage() {
                 'password': password
             })
             if (response.status === 200) {
-                navigate("/", { replace: true })
+                navigate("/chat-app", { replace: true })
             }
         } catch (error) {
             setdisplayError(true);

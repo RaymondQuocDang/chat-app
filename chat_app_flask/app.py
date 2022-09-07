@@ -12,7 +12,7 @@ cors = CORS(app,resources={r"/*":{"origins":"*"}})
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://postgres:{password}@localhost/chatapp"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config['SECRET_KEY'] = 'secret_key'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 bcrypt = Bcrypt(app)
@@ -86,6 +86,7 @@ def is_logged_in():
     user = Users.query.filter_by(id=user_id).first()
     return user.serialize()
 
+
 @app.route('/api/users')
 @cross_origin()
 def users():
@@ -117,6 +118,7 @@ def messages(message):
 @socketio.on("connect")
 def connected():
     emit("connect", {"data": "Connected Successfully"})
+
 
 @app.errorhandler(404)   
 def not_found(e):   
