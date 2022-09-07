@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "chat_app_flask"
+name = "Chat App"
 version = "0.1.0"
 description = ""
 authors = ["Raymond Dang <raymondquocdang@gmail.com>"]
