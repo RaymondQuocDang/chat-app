@@ -19,27 +19,29 @@ function RegisterPage() {
             return;
         }
 
-        const response = await axios.post('/register', {
-            'username': username,
-            'password': password
-        })
-
-        console.log(response.data)
-        console.log(response.status)
-
-        if (response.status === 201) {
-            navigate("/login", { replace: true })
+        try {
+            const response = await axios.post('/api/register', {
+                'username': username,
+                'password': password
+            })
+            if (response.status === 201) {
+                navigate('/register/success', { replace: true })
+            }
+        } catch (error) {
+            setdisplayError(true);
+            setErrorMessage("That username has already been taken.");
         }
+
 
     }
 
     function displayErrorMessage() {
-        
+
         if (displayError === true) {
             return <p className='error-message'>{errorMessage}</p>
         }
-        
-    } 
+
+    }
 
 
     return (

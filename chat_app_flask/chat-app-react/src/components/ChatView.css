@@ -62,9 +62,7 @@
     color: #333;
 }
 
-.username {
-    margin-bottom: 10px;
-}
+
 
 .message-container {
     margin: 0px 0px 10px 30px;
@@ -105,4 +103,16 @@
 
 .username {
     font-weight: 600;
+    flex: 1;
+}
+
+.username-date{
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.timestamp {
+    margin-right: 10px;
+    color: grey;
+    font-size: 14px;
 }

@@ -1,5 +1,9 @@
-import './ChatView.css'
+import './ChatView.css';
 import { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import { io } from 'socket.io-client';
+
+const socket = io.connect('http://127.0.0.1:5000');
 
 function ChatView({ current_user }) {
 
@@ -7,28 +11,58 @@ function ChatView({ current_user }) {
     const [messages, setMessages] = useState([]);
     const bottomRef = useRef(null);
 
-    function sendMessageOnEnter(keyPress) {
+    useEffect(() => {
 
+        const socket = io.connect('http://127.0.0.1:5000');
+
+        socket.on("connect",(data) => {
+            console.log(data)
+        });
+
+        return function cleanup() {
+            socket.disconnect();
+        };
+
+    }, []);
+
+    useEffect(() => {
+        fetchAllMessages();
+    }, []);
+
+    useEffect(() => {
+        socket.on("message", (data) => {
+            setMessages((prevMessages) => {
+                return [...prevMessages, { 'username': data.username, 'message': data.message, 'timestamp': data.timestamp }]
+            });
+        })
+    }, []);
+
+    function sendMessageOnEnter(keyPress) {
         if (keyPress === 'Enter') {
             sendMessage();
         }
-
     }
 
     function sendMessage() {
         if (messageText === '') {
             return;
         }
-    
-        setMessages((prevMessages) => {
-            return [...prevMessages, { 'username': 'Newt King', 'message': messageText }]
-        });
+
         setMessageText('')
 
+        socket.emit("message", {
+            'username': current_user,
+            'message': messageText,
+        })
+    }
 
+    async function fetchAllMessages() {
+        let response = await axios.get('/api/all-messages')
+        setMessages(response.data.message_list)
     }
 
     function displayMessages() {
+
         const jsxMessages = []
         messages.forEach((message, i) => {
 
@@ -36,7 +70,10 @@ function ChatView({ current_user }) {
             if (i === 0) {
                 jsxMessages.push(
                     <div key={i} className='message-username-container'>
-                        <p className='username'>{message.username}</p>
+                        <div className='username-date'>
+                            <p className='username'>{message.username}</p>
+                            <p className='timestamp'>{message.timestamp}</p>
+                        </div>
                         <p>{message.message}</p>
                     </div>
                 )
@@ -48,19 +85,20 @@ function ChatView({ current_user }) {
                 )
             } else {
                 jsxMessages.push(
-                    <div key={i} className='message-container'>
-                        <p className='username'>{message.username}</p>
+                    <div key={i} className='message-username-container'>
+                        <div className='username-date'>
+                            <p className='username'>{message.username}</p>
+                            <p className='timestamp'>{message.timestamp}</p>
+                        </div>
                         <p>{message.message}</p>
                     </div>
                 )
             }
         });
-
         return jsxMessages;
     }
 
     useEffect(() => {
-        console.log('use effect fired')
         bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 

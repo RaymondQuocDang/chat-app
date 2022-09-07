@@ -13,26 +13,27 @@ function LoginPage() {
 
     async function login() {
 
-        const response = await axios.post('/login', {
-            'username': username,
-            'password': password
-        })
-
-        console.log(response.data)
-
-        if (response.status === 200) {
-            navigate("/", { replace: true })
+        try {
+            const response = await axios.post('/api/login', {
+                'username': username,
+                'password': password
+            })
+            if (response.status === 200) {
+                navigate("/", { replace: true })
+            }
+        } catch (error) {
+            setdisplayError(true);
+            setErrorMessage("Incorrect username or password.");
         }
 
     }
 
     function displayErrorMessage() {
-        
+
         if (displayError === true) {
             return <p className='error-message'>{errorMessage}</p>
         }
-        
-    } 
+    }
 
     return (
         <div className='login-page'>

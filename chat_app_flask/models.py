@@ -37,5 +37,5 @@ class Messages(db.Model):
             'id': self.id,
             'username': self.user.username,
             'message': self.message,
-            'timestamp': self.timestamp
+            'timestamp': self.timestamp.strftime("%x %X")
         }

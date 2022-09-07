@@ -1,0 +1,37 @@
+.registration-success-page {
+    display: flex;
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+    align-items: center;
+    background-color: #d6ccc2;
+    height: 100vh;
+}
+
+.registration-success-container {
+    display: flex;
+    background-color: #333;
+    width: 350px;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+    padding: 30px 15px 30px 15px;
+    text-align: center;
+}
+
+.reg-success-text {
+    color: #eee;
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.reg-success-link-container {
+    margin-top: 20px;
+}
+
+.reg-success-link {
+    text-decoration: none;
+    font-size: 25px;
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+    color:skyblue;
+    font-weight: 600;
+}

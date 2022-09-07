@@ -18,12 +18,9 @@ function ChatPage() {
 
     async function isLoggedIn() {
         try {
-            const response = await axios.get('/is-logged-in')
-            console.log(response.data);
+            const response = await axios.get('/api/is-logged-in')
             setUser(response.data.username);
         } catch (error) {
-            console.log(error)
-            console.log(user)
             navigate('/login', { replace: true })
         }
 

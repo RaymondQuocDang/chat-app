@@ -12,24 +12,20 @@ function UserList({ current_user }) {
     }, []);
 
     async function getUsers() {
-        const response = await axios.get('/users')
-        console.log(response.data.user_list)
+        const response = await axios.get('/api/users')
         setUsers(response.data.user_list)
     }
 
     const navigate = useNavigate();
 
-    async function LogOut() {
-        const response = await axios.get('/logout')
-        console.log(response.data)
+    function LogOut() {
+        axios.get('/api/logout')
         navigate('/login', { replace: true })
     }
 
     const userList = users.map((user) => {
         return (<div key={user.id} className='user-container'><p>{user.username}</p></div>)
     })
-
-
 
     return (
         <div>
