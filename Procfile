@@ -1,1 +1,1 @@
-web: gunicorn --chdir chat_app_flask app:app
+web: gunicorn app:app
