@@ -120,5 +120,5 @@ def connected():
     emit("connect", {"data": "Connected Successfully"})
 
 
-if __name__ == '__main__':
-    socketio.run(app)
+if __name__ == "__main__":
+    app.run()
