@@ -10,7 +10,7 @@ app = Flask(__name__, static_folder='chat-app-react/build', static_url_path='')
 password = os.environ.get('PASSWORD')
 cors = CORS(app,resources={r"/*":{"origins":"*"}})
 
-app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://postgres:{password}@localhost/chatapp"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 socketio = SocketIO(app, cors_allowed_origins="*")
