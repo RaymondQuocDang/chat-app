@@ -22,12 +22,6 @@ with app.app_context():
     db.create_all()
 
 
-@app.route("/")
-@cross_origin()
-def index():
-    return send_from_directory(app.static_folder, 'index.html')
-
-
 @app.route('/api/login', methods=['GET', 'POST'])
 @cross_origin()
 def login():
@@ -119,6 +113,11 @@ def messages(message):
 def connected():
     emit("connect", {"data": "Connected Successfully"})
 
+
+@app.route("/")
+@cross_origin()
+def index():
+    return send_from_directory(app.static_folder, 'index.html')
 
 @app.errorhandler(404)   
 def not_found(e):   
