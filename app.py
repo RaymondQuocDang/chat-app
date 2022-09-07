@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Flask, request, jsonify, make_response, send_from_directory, session, redirect, url_for
+from flask import Flask, request, jsonify, send_from_directory, session
 from flask_bcrypt import Bcrypt
 import os
 from models import db, Users, Messages
@@ -20,6 +20,12 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
+
+
+@app.route("/")
+@cross_origin()
+def index():
+    return send_from_directory(app.static_folder, 'index.html')
 
 
 @app.route('/api/login', methods=['GET', 'POST'])
@@ -114,10 +120,5 @@ def connected():
     emit("connect", {"data": "Connected Successfully"})
 
 
-@app.route("/")
-@cross_origin()
-def index():
-    return send_from_directory(app.static_folder, 'index.html')
-
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    socketio.run(app)
