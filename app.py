@@ -118,6 +118,11 @@ def messages(message):
 @socketio.on("connect")
 def connected():
     emit("connect", {"data": "Connected Successfully"})
+    
+
+@app.errorhandler(404)   
+def not_found(e):   
+  return app.send_static_file('index.html')
 
 
 if __name__ == '__main__':
