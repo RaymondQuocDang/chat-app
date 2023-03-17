@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { io } from 'socket.io-client';
 
-const socket = io.connect('http://127.0.0.1:5000');
+const socket = io.connect('https://chat-app-ff6f.onrender.com');
 
 function ChatView({ current_user }) {
 
@@ -13,7 +13,7 @@ function ChatView({ current_user }) {
 
     useEffect(() => {
 
-        const socket = io.connect('http://127.0.0.1:5000');
+        const socket = io.connect('https://chat-app-ff6f.onrender.com');
 
         socket.on("connect",(data) => {
             console.log(data)
