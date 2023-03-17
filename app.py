@@ -102,7 +102,7 @@ def all_messages():
     return jsonify({"message_list": [query_message.serialize() for query_message in query_messages]})
 
 
-@socketio.on('message')
+@socketio.on('new_message_sent')
 def messages(message):
 
         user_id = Users.query.filter_by(username=message['username']).first().id
@@ -112,7 +112,7 @@ def messages(message):
         db.session.add(entry)
         db.session.commit()
         
-        emit('message', entry.serialize(), broadcast=True)
+        emit('new_message_recieved', entry.serialize(), broadcast=True)
 
 
 @socketio.on("connect")

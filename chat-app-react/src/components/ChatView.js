@@ -30,7 +30,7 @@ function ChatView({ current_user }) {
     }, []);
 
     useEffect(() => {
-        socket.on("message", (data) => {
+        socket.on("new_message_recieved", (data) => {
             setMessages((prevMessages) => {
                 return [...prevMessages, { 'username': data.username, 'message': data.message, 'timestamp': data.timestamp }]
             });
@@ -50,7 +50,7 @@ function ChatView({ current_user }) {
 
         setMessageText('')
 
-        socket.emit("message", {
+        socket.emit("new_message_sent", {
             'username': current_user,
             'message': messageText,
         })
